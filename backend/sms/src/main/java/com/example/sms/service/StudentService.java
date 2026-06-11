@@ -5,7 +5,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.sms.model.Student;
 import com.example.sms.repository.StudentRepository;
+import com.example.sms.exception.StudentNotFoundException;
 import java.util.List;
+import com.example.sms.dto.StudentRequestDTO;
 
 @Service
 public class StudentService {
@@ -29,6 +31,18 @@ public class StudentService {
         return repository.findAll();
     }
     public Student saveStudent(Student student){
+        return repository.save(student);
+    }
+    public Student getStudentById(Integer id){
+        return repository
+        .findById(id)
+        .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
+    }
+
+    public Student addStudent(StudentRequestDTO dto){
+        Student student = new Student();
+        student.setName(dto.getName());
+        student.setCourse(dto.getCourse());
         return repository.save(student);
     }
 }

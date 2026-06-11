@@ -1,21 +1,25 @@
 package com.example.sms.controller;
 
-import java.util.ArrayList;
+// import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+// import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.beans.factory.annotation.Autowired;
+
 
 import com.example.sms.service.StudentService;
-
 import com.example.sms.model.Student;
+import com.example.sms.dto.StudentRequestDTO;
+import com.example.sms.dto.StudentResponseDTO;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/students")
@@ -58,9 +62,28 @@ public class StudentController {
         return service.getAllStudents();
     }
 
+    // @PostMapping
+    // public Student addStudent(@RequestBody Student student){
+    //     return service.saveStudent(student);
+    // }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getStudentById(@PathVariable Integer id){
+
+        Student student = service.getStudentById(id);
+        StudentResponseDTO response = new StudentResponseDTO(
+            student.getId(),
+            student.getName(),
+            student.getCourse()
+        );
+        return ResponseEntity.ok(response);
+       
+    }
+
     @PostMapping
-    public Student addStudent(@RequestBody Student student){
-        return service.saveStudent(student);
+    public ResponseEntity<?> addStudent(@RequestBody StudentRequestDTO dto){
+       Student student = service.addStudent(dto);
+       return ResponseEntity.ok(student);
     }
   
 }
